@@ -1,11 +1,10 @@
 import random
+import time
 
 from Game import Game
 
 
-#print('hello')
-
-random.seed(848668)
+random.seed(time.time())
 game = Game(11, 11)
 game.play()
 

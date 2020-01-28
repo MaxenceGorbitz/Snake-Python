@@ -1,61 +1,62 @@
-from math import *
 import numpy as np
-import random
-import time
 
 from Snake import Snake
+from Apple import Apple
+
 
 class Game:
-    def __init__(self, heigth, width):
-        self._snake = Snake(width / 2, heigth / 2)
-        self._heigth = heigth
-        self._width = width
-        self._is_apple = False
-        self._board = np.chararray(heigth * width).reshape(heigth, width)
-        self.init_board()
+    def __init__(self, window_width, window_height):
+        self._snake = Snake(window_width, window_height)
+        self._height = window_height
+        self._width = window_width
+        self._apple = Apple(self._width - 1, self._height - 1)
+        self._board = np.chararray(window_height * window_width).reshape(window_height, window_width)
 
-    def init_board(self):
+    def reset_board(self):
         self._board[:] = '.'
-        self._board[floor(self._heigth / 2)][floor(self._width / 2)] = 's'
-
 
     def play(self):
-        #self.enter_key()
-        while not self.is_lost():
-            if not self._is_apple:
-                self.create_appel()
-            print(self.__repr__())
-            self.move()
-            time.sleep(0.4)
+        self.create_new_apple()
+        while not self.has_lost():
+            self.reset_board()
+            print(self.draw_board())
+            self.move_snake_head()
+            if self.is_catching_the_apple():
+                self._snake.growth()
+                self.create_new_apple()
+            else:
+                self._snake.move_body()
+        print('GAME OVER')
 
-    """def enter_key(self):
-        while True:
-            time.sleep(1)
-            print('test')"""
-
-    def move(self):
+    def move_snake_head(self):
         key = input()
         if key == 'z':
-            print('up')
+            self._snake.move_up()
         elif key == 'q':
-            print('left')
+            self._snake.move_left()
         elif key == 's':
-            print('down')
+            self._snake.move_down()
         elif key == 'd':
-            print('right')
+            self._snake.move_right()
         else:
             print('key not valid')
 
-    def is_lost(self):
-        return False
+    def is_catching_the_apple(self):
+        return self._apple.x == self._snake.head_x and self._apple.y == self._snake.head_y
 
-    def create_appel(self):
-        x = random.randint(0, self._width - 1)
-        y = random.randint(0, self._heigth - 1)
-        self._board[x][y] = 'a'
-        self._is_apple = True
+    def has_lost(self):
+        return self._snake.has_lost()
 
-    def __repr__(self):
+    def create_new_apple(self):
+        apple_coord = self._apple.get_coordinate()
+        while apple_coord in self._snake.body_coordinates or apple_coord == self._snake.get_head_coordinate():
+            self._apple.new_coordinates(self._width - 1, self._height - 1)
+            apple_coord = self._apple.get_coordinate()
+
+    def draw_board(self):
+        self.draw_snake()
+        # draw apple
+        self._board[self._apple.y][self._apple.x] = 'a'
         s = ''
         for r in self._board:
             row = ''
@@ -64,3 +65,9 @@ class Game:
             s = s + row + '\n'
         return s
 
+    def draw_snake(self):
+        # draw head
+        self._board[self._snake.head_y][self._snake.head_x] = 's'
+        # draw body
+        for c in self._snake.body_coordinates:
+            self._board[c[1]][c[0]] = "b"
