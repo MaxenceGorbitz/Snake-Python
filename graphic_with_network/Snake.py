@@ -1,6 +1,8 @@
 from math import *
 from enum import Enum
 
+from graphic_with_network.ConstantVariables import ConstantVariables
+
 
 class Direction(Enum):
     UP = "up"
@@ -10,10 +12,11 @@ class Direction(Enum):
 
 
 class Snake:
-    def __init__(self, nb_tile_x, nb_tile_y, tile_width):
+    def __init__(self, id_client, nb_tile_x, nb_tile_y):
         self._length = 1
-        self._window_width_tile = nb_tile_x
-        self._window_height_tile = nb_tile_y
+        self._id_client = id_client
+        self._nb_tile_x = ConstantVariables.NB_COLUMN
+        self._nb_tile_y = ConstantVariables.NB_ROW
         self._head_x = floor(nb_tile_x / 2)
         self._head_y = floor(nb_tile_y / 2)
         # the first element is the last part of the queue
@@ -22,6 +25,10 @@ class Snake:
         self._head_coordinate_before_move = []
         self._direction_current = ""
         self._direction_forbidden = ""
+
+    @property
+    def id_client(self):
+        return self._id_client
 
     @property
     def head_x(self):
@@ -76,7 +83,7 @@ class Snake:
             self.set_head_coordinate_before_move()
             self._head_y -= 1
             if self._head_y < 0:
-                self._head_y = self._window_height_tile - 1
+                self._head_y = self._nb_tile_y - 1
             self._direction_forbidden = Direction.DOWN
         else:
             self.move_down()
@@ -85,7 +92,7 @@ class Snake:
         if self._direction_forbidden != Direction.DOWN:
             self.set_head_coordinate_before_move()
             self._head_y += 1
-            if self._head_y >= self._window_height_tile:
+            if self._head_y >= self._nb_tile_y:
                 self._head_y = 0
             self._direction_forbidden = Direction.UP
         else:
@@ -96,7 +103,7 @@ class Snake:
             self.set_head_coordinate_before_move()
             self._head_x -= 1
             if self._head_x < 0:
-                self._head_x = self._window_width_tile - 1
+                self._head_x = self._nb_tile_x - 1
             self._direction_forbidden = Direction.RIGHT
         else:
             self.move_right()
@@ -105,7 +112,7 @@ class Snake:
         if self._direction_forbidden != Direction.RIGHT:
             self.set_head_coordinate_before_move()
             self._head_x += 1
-            if self._head_x >= self._window_width_tile:
+            if self._head_x >= self._nb_tile_x:
                 self._head_x = 0
             self._direction_forbidden = Direction.LEFT
         else:

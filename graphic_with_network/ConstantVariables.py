@@ -1,0 +1,9 @@
+class ConstantVariables:
+    WINDOW_WIDTH = 1200
+    WINDOW_HEIGHT = 800
+    TILE_WIDTH = 20
+    NB_ROW = WINDOW_WIDTH / TILE_WIDTH
+    NB_COLUMN = WINDOW_HEIGHT / TILE_WIDTH
+
+    NETWORK_GET = "get"
+
