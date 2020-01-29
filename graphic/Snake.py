@@ -1,8 +1,6 @@
 from math import *
 from enum import Enum
 
-import pygame
-
 
 class Direction(Enum):
     UP = "up"
@@ -25,7 +23,6 @@ class Snake:
         self._head_coordinate_before_move = []
         self._direction_current = ""
         self._direction_forbidden = ""
-        self._rects_body = []
         self._velocity = 5
 
     @property

@@ -111,5 +111,6 @@ class Game:
         pygame.draw.rect(self._screen, GREEN, rect)
         # body
         for part in self._snake.body_coordinates:
-            rect = pygame.Rect(part[0] * self._tile_width, part[1] * self._tile_width, self._tile_width, self._tile_width)
+            rect = pygame.Rect(part[0] * self._tile_width, part[1] * self._tile_width, self._tile_width,
+                               self._tile_width)
             pygame.draw.rect(self._screen, RED, rect)
