@@ -4,29 +4,43 @@ from math import *
 
 
 class Apple:
-    def __init__(self, x_max, y_max):
-        self._x = random.randint(0, x_max)
-        self._y = random.randint(0, y_max)
-        self._height = floor(x_max / 50)
-        self._width = floor(x_max / 50)
-        self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
+    def __init__(self, x_tile_max, y_tile_max, tile_width):
+        self._x_tile = random.randint(0, x_tile_max)
+        self._y_tile = random.randint(0, y_tile_max)
+        self._tile_width = tile_width
+        # self._rect = pygame.Rect(self._x, self._y, self._tile_width, self._tile_width)
+        self._image = pygame.image.load('assets/apple.png')
+        self._image = pygame.transform.scale(self._image, (self._tile_width, self._tile_width))
+        self._rect_i = self._image.get_rect()
+        self._rect_i.x = self._x_tile * self._tile_width
+        self._rect_i.y = self._y_tile * self._tile_width
 
     @property
     def x(self):
-        return self._x
+        return self._x_tile
 
     @property
     def y(self):
-        return self._y
+        return self._y_tile
 
     @property
     def rect(self):
-        self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
-        return self._rect
+        # self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
+        return self._rect_i
 
-    def set_new_coordinates(self, x_max, y_max):
-        self._x = random.randint(0, x_max)
-        self._y = random.randint(0, y_max)
+    def set_new_coordinates(self, x_tile_max, y_tile_max):
+        self._x_tile = random.randint(0, x_tile_max)
+        self._y_tile = random.randint(0, y_tile_max)
+        self._rect_i.x = self._x_tile * self._tile_width
+        self._rect_i.y = self._y_tile * self._tile_width
 
     def get_coordinate(self):
-        return [self._x, self._y]
+        return [self._x_tile, self._y_tile]
+
+    @property
+    def rect_i(self):
+        return self._rect_i
+
+    @property
+    def image(self):
+        return self._image

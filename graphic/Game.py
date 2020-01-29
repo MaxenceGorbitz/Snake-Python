@@ -14,34 +14,45 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
+# images
+# image_apple = pygame.image.load('assets/apple.png')
+
 
 class Game:
     def __init__(self, window_width, window_height):
-        self._snake = Snake(window_width, window_height)
-        self._height = window_height
-        self._width = window_width
-        self._apple = Apple(self._width - 1, self._height - 1)
-        self._screen = pygame.display.set_mode((window_width, window_height))
-        self._running = True
-        # self._board = np.chararray(window_height * window_width).reshape(window_height, window_width)
+        # tiles and pixels
+        self._nb_tile_x = 60
+        self._tile_width = floor(window_width / self._nb_tile_x)
+        self._width_px = self._tile_width * self._nb_tile_x
+        self._nb_tile_y = floor(window_height / self._tile_width)
+        self._height_px = self._tile_width * self._nb_tile_y
 
-    def reset_screen(self):
-        self._screen.fill(WHITE)
+        # elements
+        # screen
+        self._screen = pygame.display.set_mode((self._width_px, self._height_px))
+        self._background = pygame.image.load('assets/grass.jpg')
+        self._background = pygame.transform.scale(self._background, (self._width_px, self._height_px))
+        # objects
+        self._snake = Snake(self._nb_tile_x, self._nb_tile_y, self._tile_width)
+        self._apple = Apple(self._nb_tile_x - 1, self._nb_tile_y - 1, self._tile_width)
+
+        # other
+        self._running = True
 
     def play(self):
         self.create_new_apple()
         while not self.has_lost() and self._running:
+
             self.manage_event()
             self._snake.move()
-            self.reset_screen()
             self.draw_screen()
             if self.is_catching_the_apple():
                 self.create_new_apple()
                 self._snake.growth()
             else:
                 self._snake.move_body()
-            pygame.display.update()
-            time.sleep(0.1)
+            pygame.display.flip()
+            time.sleep(0.05)
 
     def manage_event(self):
         for event in pygame.event.get():
@@ -71,48 +82,34 @@ class Game:
             print('key not valid')"""
 
     def is_catching_the_apple(self):
-        rect_head = self._snake.rect_head
-        rect_apple = self._apple.rect
-        return rect_head.colliderect(rect_apple)
-        # return self._apple.x == self._snake.head_x and self._apple.y == self._snake.head_y
+        return self._apple.x == self._snake.head_x and self._apple.y == self._snake.head_y
 
     def has_lost(self):
-        # if else for debug
-        if self._snake.has_lost():
-            return True
-        else:
-            return False
+        return self._snake.has_lost()
 
     def create_new_apple(self):
-        while self._apple.rect.colliderect(self._snake.rect_head):
-            self._apple.set_new_coordinates(self._width - 1, self._height - 1)
-
-            """ apple_coord = self._apple.get_coordinate()
-             while apple_coord in self._snake.body_coordinates or apple_coord == self._snake.get_head_coordinate():
-                 self._apple.new_coordinates(self._width - 1, self._height - 1)
-                 apple_coord = self._apple.get_coordinate()"""
+        apple_coord = self._apple.get_coordinate()
+        while apple_coord in self._snake.body_coordinates or apple_coord == self._snake.get_head_coordinate():
+            self._apple.set_new_coordinates(self._nb_tile_x - 1, self._nb_tile_y - 1)
+            apple_coord = self._apple.get_coordinate()
 
     def draw_screen(self):
+        self._screen.blit(self._background, (0, 0))
+
+        # draw apple
+        # pygame.draw.rect(self._screen, RED, self._apple.rect)
+
+        self._screen.blit(self._apple.image, self._apple.rect_i)
+
+        # self._screen.blit(image_apple, (100, -100))
+
         # draw snake
-        pygame.draw.rect(self._screen, GREEN, self._snake.rect_head)
-        # draw apple
-        pygame.draw.rect(self._screen, RED, self._apple.rect)
-
-    """def draw_board(self):
-        self.draw_snake()
-        # draw apple
-        self._board[self._apple.y][self._apple.x] = 'a'
-        s = ''
-        for r in self._board:
-            row = ''
-            for c in r:
-                row = row + c.decode() + " "
-            s = s + row + '\n'
-        return s
-
-    def draw_snake(self):
-        # draw head
-        self._board[self._snake.head_y][self._snake.head_x] = 's'
-        # draw body
-        for c in self._snake.body_coordinates:
-            self._board[c[1]][c[0]] = "b"""
+        # head
+        head_coordinate = self._snake.get_head_coordinate()
+        rect = pygame.Rect(head_coordinate[0] * self._tile_width, head_coordinate[1] * self._tile_width,
+                           self._tile_width, self._tile_width)
+        pygame.draw.rect(self._screen, GREEN, rect)
+        # body
+        for part in self._snake.body_coordinates:
+            rect = pygame.Rect(part[0] * self._tile_width, part[1] * self._tile_width, self._tile_width, self._tile_width)
+            pygame.draw.rect(self._screen, RED, rect)

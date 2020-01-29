@@ -12,22 +12,21 @@ class Direction(Enum):
 
 
 class Snake:
-    def __init__(self, window_width, window_height):
+    def __init__(self, nb_tile_x, nb_tile_y, tile_width):
         self._length = 1
-        self._window_width = window_width
-        self._window_height = window_height
-        self._head_x = floor(window_width / 2)
-        self._head_y = floor(window_height / 2)
+        self._tile_width = tile_width
+        self._window_width_tile = nb_tile_x
+        self._window_height_tile = nb_tile_y
+        self._head_x = floor(nb_tile_x / 2)
+        self._head_y = floor(nb_tile_y / 2)
         # the first element is the last part of the queue
         # the last element is the first part of the queue
         self._body_coordinates = []
         self._head_coordinate_before_move = []
         self._direction_current = ""
         self._direction_forbidden = ""
-        self._height = floor(self._window_width / 40)
-        self._width = floor(self._window_width / 40)
-        self._rect_head = pygame.Rect(self._head_x, self._head_y, self._width, self._height)
         self._rects_body = []
+        self._velocity = 5
 
     @property
     def head_x(self):
@@ -53,10 +52,10 @@ class Snake:
         if value in Direction:
             self._direction_current = value
 
-    @property
+    """@property
     def rect_head(self):
-        self._rect_head = pygame.Rect(self._head_x, self._head_y, self._width, self._height)
-        return self._rect_head
+        self._rect_head = pygame.Rect(self._head_x_px, self._head_y_px, self._tile_width, self._tile_width)
+        return self._rect_head"""
 
     def growth(self):
         self._length += 1
@@ -71,7 +70,6 @@ class Snake:
             self.move_left()
         elif self.direction_current == Direction.RIGHT:
             self.move_right()
-        return
 
     def move_body(self):
         if len(self._body_coordinates) > 0:
@@ -86,9 +84,9 @@ class Snake:
     def move_up(self):
         if self._direction_forbidden != Direction.UP:
             self.set_head_coordinate_before_move()
-            self._head_y -= 10
+            self._head_y -= 1
             if self._head_y < 0:
-                self._head_y = self._window_height - 1
+                self._head_y = self._window_height_tile - 1
             self._direction_forbidden = Direction.DOWN
         else:
             self.move_down()
@@ -96,8 +94,8 @@ class Snake:
     def move_down(self):
         if self._direction_forbidden != Direction.DOWN:
             self.set_head_coordinate_before_move()
-            self._head_y += 10
-            if self._head_y >= self._window_height:
+            self._head_y += 1
+            if self._head_y >= self._window_height_tile:
                 self._head_y = 0
             self._direction_forbidden = Direction.UP
         else:
@@ -106,9 +104,9 @@ class Snake:
     def move_left(self):
         if self._direction_forbidden != Direction.LEFT:
             self.set_head_coordinate_before_move()
-            self._head_x -= 10
+            self._head_x -= 1
             if self._head_x < 0:
-                self._head_x = self._window_width - 1
+                self._head_x = self._window_width_tile - 1
             self._direction_forbidden = Direction.RIGHT
         else:
             self.move_right()
@@ -116,8 +114,8 @@ class Snake:
     def move_right(self):
         if self._direction_forbidden != Direction.RIGHT:
             self.set_head_coordinate_before_move()
-            self._head_x += 10
-            if self._head_x >= self._window_width:
+            self._head_x += 1
+            if self._head_x >= self._window_width_tile:
                 self._head_x = 0
             self._direction_forbidden = Direction.LEFT
         else:
