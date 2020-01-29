@@ -36,7 +36,7 @@ class Game:
     # move snakes
     def move_snakes(self):
         for snake in self._snakes:
-            snake.move()
+            snake.move_head()
     """def play(self):
         self.create_new_apple()
         while not self.has_lost() and self._running:

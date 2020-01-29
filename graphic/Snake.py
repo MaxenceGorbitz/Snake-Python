@@ -51,7 +51,7 @@ class Snake:
         self._length += 1
         self._body_coordinates.append(self._head_coordinate_before_move)
 
-    def move(self):
+    def move_head(self):
         if self.direction_current == Direction.UP:
             self.move_up()
         elif self.direction_current == Direction.DOWN:

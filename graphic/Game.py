@@ -42,10 +42,9 @@ class Game:
     def play(self):
         self.create_new_apple()
         while not self.has_lost() and self._running:
-
             self.manage_event()
-            self._snake.move()
             self.draw_screen()
+            self._snake.move_head()
             if self.is_catching_the_apple():
                 self.create_new_apple()
                 self._snake.growth()
@@ -68,19 +67,6 @@ class Game:
                 elif event.key == pygame.K_d:
                     self._snake.direction_current = Direction.RIGHT
 
-    """def move_snake_head(self):
-        key = input()
-        if key == 'z':
-            self._snake.move_up()
-        elif key == 'q':
-            self._snake.move_left()
-        elif key == 's':
-            self._snake.move_down()
-        elif key == 'd':
-            self._snake.move_right()
-        else:
-            print('key not valid')"""
-
     def is_catching_the_apple(self):
         return self._apple.x == self._snake.head_x and self._apple.y == self._snake.head_y
 
@@ -94,14 +80,11 @@ class Game:
             apple_coord = self._apple.get_coordinate()
 
     def draw_screen(self):
+        # background
         self._screen.blit(self._background, (0, 0))
 
         # draw apple
-        # pygame.draw.rect(self._screen, RED, self._apple.rect)
-
         self._screen.blit(self._apple.image, self._apple.rect_i)
-
-        # self._screen.blit(image_apple, (100, -100))
 
         # draw snake
         # head
