@@ -2,11 +2,11 @@ import numpy as np
 from math import *
 import time
 
-import graphic_with_network.ConstantVariables
-from graphic_with_network.ConstantVariables import ConstantVariables
-from graphic_with_network.Snake import Snake
-from graphic_with_network.Snake import Direction
-from graphic_with_network.Apple import Apple
+import graphic_with_network_old.ConstantVariables
+from graphic_with_network_old.ConstantVariables import ConstantVariables
+from graphic_with_network_old.Snake import Snake
+from graphic_with_network_old.Snake import Direction
+from graphic_with_network_old.Apple import Apple
 
 # images
 # image_apple = pygame.image.load('assets/apple.png')

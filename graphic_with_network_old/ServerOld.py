@@ -1,11 +1,10 @@
 import socket
 import pickle
 from _thread import *
-import sys
 
-from graphic_with_network.Game import Game
+from graphic_with_network_old.Game import Game
 
-server = "10.103.120.81"
+server = "127.0.0.1"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,7 +23,7 @@ game = Game()
 
 def thread_client(connection, player):
     #connection.send(str.encode(str(player)))
-    connection.send(pickle.loads(connection.recv(2048 * 2)))
+    connection.send_and_get_data(pickle.loads(connection.recv(2048 * 2)))
     reply = ""
     while True:
         try:
@@ -55,8 +54,10 @@ current_user = 0
 while True:
     # conn : new socket
     # address : address bound to the socket
+    print(pickle.dumps(game))
     conn, address = s.accept()
     print("Connected to: ", address)
 
     start_new_thread(thread_client, (conn, current_user))
     current_user += 1
+
