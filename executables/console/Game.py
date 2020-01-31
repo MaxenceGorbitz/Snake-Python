@@ -1,7 +1,7 @@
 import numpy as np
 
-from consol.Snake import Snake
-from consol.Apple import Apple
+from Snake import Snake
+from Apple import Apple
 
 
 class Game:

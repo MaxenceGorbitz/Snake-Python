@@ -2,7 +2,7 @@ import random
 import time
 import pygame
 
-from graphic.Game import Game
+from Game import Game
 
 
 pygame.init()

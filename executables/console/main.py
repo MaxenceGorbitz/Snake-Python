@@ -1,7 +1,7 @@
 import random
 import time
 
-from consol.Game import Game
+from Game import Game
 
 
 random.seed(time.time())

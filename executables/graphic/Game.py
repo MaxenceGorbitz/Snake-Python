@@ -1,11 +1,10 @@
-import numpy as np
 from math import *
 import time
 import pygame
 
-from graphic.Snake import Snake
-from graphic.Snake import Direction
-from graphic.Apple import Apple
+from Snake import Snake
+from Snake import Direction
+from Apple import Apple
 
 # Colors
 WHITE = (255, 255, 255)

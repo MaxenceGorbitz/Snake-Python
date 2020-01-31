@@ -1,6 +1,5 @@
 import random
 import pygame
-from math import *
 
 
 class Apple:
