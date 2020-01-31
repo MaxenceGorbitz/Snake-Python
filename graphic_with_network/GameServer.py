@@ -1,8 +1,9 @@
 from math import *
 import time
 
-from graphic_with_network_old.ConstantVariables import ConstantVariables
+from graphic_with_network.ConstantVariables import ConstantVariables
 from graphic_with_network.Snake import Snake
+from graphic_with_network.Snake import Direction
 from graphic_with_network.Apple import Apple
 
 
@@ -28,20 +29,16 @@ class GameServer:
         return self._apple
 
     def create_snake(self, id_client):
-        self._snakes.append(Snake(id_client, self._nb_tile_x, self._nb_tile_y))
+        coordinate_not_free = []
+        for snake in self._snakes:
+            coordinate_not_free.append(snake.get_head_coordinate())
+            for part_snake in snake.body_coordinates:
+                coordinate_not_free.append(part_snake)
+        coordinate_not_free.append(self.apple.get_coordinate())
+        self._snakes.append(Snake(id_client, self._nb_tile_x, self._nb_tile_y, coordinate_not_free))
 
     def start(self):
         self.create_new_apple()
-
-    def update_pos(self):
-        for snake in self._snakes:
-            snake.move_head()
-            if self.is_apple_caught(snake):
-                self.create_new_apple()
-                snake.growth()
-            else:
-                snake.move_body()
-        time.sleep(0.05)
 
     def is_apple_caught(self, snake):
         return self._apple.x == snake.head_x and self._apple.y == snake.head_y

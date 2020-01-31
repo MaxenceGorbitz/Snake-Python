@@ -1,5 +1,3 @@
-import numpy as np
-from math import *
 import time
 import pygame
 
@@ -15,6 +13,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+GREY = (200, 200, 200)
 
 
 class GameClient:
@@ -33,7 +32,8 @@ class GameClient:
         self._background = pygame.transform.scale(self._background, (self._width_px, self._height_px))
         self._apple_image = pygame.image.load('../assets/apple.png')
         self._apple_image = pygame.transform.scale(self._apple_image, (self._tile_width, self._tile_width))
-        # objects
+
+        # game
         self._game = GameServer()
 
         # socket
@@ -41,18 +41,27 @@ class GameClient:
 
         # other
         self._running = True
-        self._my_direction = ""
+        self._my_direction = "not_set"
 
     def play(self):
+        # create connection
         self._socket.connect()
-        # self.create_my_snake()
-        while not self.has_lost() and self._running:
+
+        while self._running:
+
             self.manage_event()
-            # self._socket.send_a_message()
-            self._game = self._socket.send_and_get_data(self._my_direction)
+
+            # ask to the server for receive game data
+            # if the client has lost : this method return None
+            self._game = self._socket.send_direction_and_get_data(self._my_direction)
+
+            if self._game is None:
+                self._running = False
+                break
 
             self.draw_screen()
 
+            # update display
             pygame.display.flip()
             time.sleep(0.05)
 
@@ -62,17 +71,13 @@ class GameClient:
                 self._running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    self._my_direction = Direction.UP
+                    self._my_direction = Direction.UP.value
                 elif event.key == pygame.K_a:
-                    self._my_direction = Direction.LEFT
+                    self._my_direction = Direction.LEFT.value
                 elif event.key == pygame.K_s:
-                    self._my_direction = Direction.DOWN
+                    self._my_direction = Direction.DOWN.value
                 elif event.key == pygame.K_d:
-                    self._my_direction = Direction.RIGHT
-
-    # TODO
-    def has_lost(self):
-        return False
+                    self._my_direction = Direction.RIGHT.value
 
     def draw_screen(self):
         # background
@@ -84,19 +89,18 @@ class GameClient:
         rect_apple.y = self._game.apple.get_coordinate()[1] * ConstantVariables.TILE_WIDTH
         self._screen.blit(self._apple_image, rect_apple)
 
-        # draw snake
+        # draw snakes
         for snake in self._game.snakes:
             # head
             head_coordinate = snake.get_head_coordinate()
             rect = pygame.Rect(head_coordinate[0] * self._tile_width, head_coordinate[1] * self._tile_width,
                                self._tile_width, self._tile_width)
-            pygame.draw.rect(self._screen, GREEN, rect)
+            if snake.id_client == self._socket.id:
+                pygame.draw.rect(self._screen, GREEN, rect)
+            else:
+                pygame.draw.rect(self._screen, RED, rect)
             # body
             for part in snake.body_coordinates:
                 rect = pygame.Rect(part[0] * self._tile_width, part[1] * self._tile_width, self._tile_width,
                                    self._tile_width)
-                pygame.draw.rect(self._screen, RED, rect)
-
-    # TODO
-    def create_my_snake(self):
-        pass
+                pygame.draw.rect(self._screen, GREY, rect)
