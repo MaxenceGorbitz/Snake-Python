@@ -90,6 +90,7 @@ class ServerSocket:
                                 notified_socket.send(message_game)
 
                                 # remove client
+                                print('Closed connection from: {}'.format(self._clients[notified_socket]))
                                 self._game.snakes.remove(snake)
                                 self._sockets_list.remove(notified_socket)
                                 del self._clients[notified_socket]

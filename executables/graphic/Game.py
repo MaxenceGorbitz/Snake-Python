@@ -54,13 +54,13 @@ class Game:
             if event.type == pygame.QUIT:
                 self._running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
                     self._snake.direction_current = Direction.UP
-                elif event.key == pygame.K_a:
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
                     self._snake.direction_current = Direction.LEFT
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     self._snake.direction_current = Direction.DOWN
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                     self._snake.direction_current = Direction.RIGHT
 
     def is_catching_the_apple(self):
