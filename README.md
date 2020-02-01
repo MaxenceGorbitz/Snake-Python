@@ -9,6 +9,7 @@ Ce projet reflète l'évolution du développement d'un jeu snake multi-joueurs.
 
 #### Prérequis
 - Installation de Python
+- Installation de NumPy
 - Installation de Pygame pour les jeux autres que celui en console
 
 ### Jeu en console
