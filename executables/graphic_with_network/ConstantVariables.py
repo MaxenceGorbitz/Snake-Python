@@ -6,6 +6,6 @@ class ConstantVariables:
     NB_COLUMN = WINDOW_WIDTH / TILE_WIDTH
 
     NETWORK_HEADER_LENGTH = 10
-    NETWORK_IP = "127.0.0.1"
+    NETWORK_IP = "192.168.0.19"
     NETWORK_PORT = 5555
 
